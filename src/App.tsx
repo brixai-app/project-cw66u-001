@@ -7,25 +7,39 @@ import Home from '@/pages/Home';
 
 function StudentDashboard() {
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 space-y-4">
       <h1 className="font-[Cairo] text-2xl font-semibold text-[#0B1B2B]">
-        لوحة الطالب
+        لوحة الطالب (ديمو)
       </h1>
       <p className="mt-2 font-[Tajawal] text-sm text-[#5B6B7A]">
-        سيتم إضافة محتوى لوحة الطالب قريباً.
+        هذه لوحة تجريبية لعرض كيفية تتبع الدروس، المفضلة، وتقدمك في المنصة.
       </p>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="rounded-[14px] bg-[#F5F7FA] border border-[#D9E2EC] p-4 text-right">
+          <p className="text-xs font-[Tajawal] text-[#5B6B7A]">الدروس المكتملة (تجريبي)</p>
+          <p className="mt-1 text-2xl font-[Cairo] text-[#0B1B2B]">3</p>
+        </div>
+        <div className="rounded-[14px] bg-[#F5F7FA] border border-[#D9E2EC] p-4 text-right">
+          <p className="text-xs font-[Tajawal] text-[#5B6B7A]">ساعات المذاكرة هذا الأسبوع</p>
+          <p className="mt-1 text-2xl font-[Cairo] text-[#0B1B2B]">5</p>
+        </div>
+        <div className="rounded-[14px] bg-[#F5F7FA] border border-[#D9E2EC] p-4 text-right">
+          <p className="text-xs font-[Tajawal] text-[#5B6B7A]">الوحدات المفتوحة حالياً</p>
+          <p className="mt-1 text-2xl font-[Cairo] text-[#0B1B2B]">2</p>
+        </div>
+      </div>
     </div>
   );
 }
 
 function TeacherDashboard() {
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 space-y-4">
       <h1 className="font-[Cairo] text-2xl font-semibold text-[#0B1B2B]">
-        لوحة الأستاذ
+        لوحة الأستاذ (ديمو)
       </h1>
       <p className="mt-2 font-[Tajawal] text-sm text-[#5B6B7A]">
-        سيتم إضافة أدوات إدارة الدروس قريباً.
+        هذه لوحة تجريبية توضح كيف يمكن للأستاذ إدارة الدروس وتتبع أداء التلاميذ.
       </p>
     </div>
   );
@@ -33,12 +47,12 @@ function TeacherDashboard() {
 
 function AdminDashboard() {
   return (
-    <div className="px-4 py-6">
+    <div className="px-4 py-6 space-y-4">
       <h1 className="font-[Cairo] text-2xl font-semibold text-[#0B1B2B]">
-        لوحة الإدارة
+        لوحة الإدارة (ديمو)
       </h1>
       <p className="mt-2 font-[Tajawal] text-sm text-[#5B6B7A]">
-        سيتم إضافة أدوات الإشراف والتقارير قريباً.
+        هذه لوحة تجريبية تعرض أقساماً محتملة لتقارير المنصة وإدارة المحتوى.
       </p>
     </div>
   );

@@ -22,7 +22,7 @@ import {
   lessonProgress as mockProgress,
   notifications as mockNotifications,
 } from '@/data/mockData';
-import { supabaseClient, getCurrentSession, getCurrentUser, signOutSafely } from '@/lib/supabaseClient';
+import { supabaseClient, getCurrentSession, getCurrentUser, signOutSafely, isSupabaseConnected } from '@/lib/supabaseClient';
 
 export interface AppUser {
   id: string;
@@ -63,14 +63,33 @@ export const AppProvider = ({ children }: { children?: ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
+        const connected = isSupabaseConnected();
+        if (!connected) {
+          // Explicit demo mode: always use a clearly labeled mock user.
+          const demoUser: AppUser = {
+            id: 'demo-user',
+            role: 'student',
+            fullName: 'طالب تجريبي (ديمو)',
+            email: 'demo@student.tafaouq.ma',
+          };
+          setUser(demoUser);
+          setRole(demoUser.role);
+          setSubscriptionStatus('trialing');
+          return;
+        }
+
         const session = await getCurrentSession();
         const currentUser = await getCurrentUser();
+
         if (session && currentUser) {
           const mappedUser: AppUser = {
-            id: currentUser.id ?? 'unknown',
-            role: (currentUser.user_metadata?.role as UserRole) ?? 'student',
-            fullName: (currentUser.user_metadata?.fullName as string) ?? currentUser.email ?? 'مستخدم',
-            email: currentUser.email ?? '',
+            id: (currentUser as any)?.id ?? 'unknown',
+            role: ((currentUser as any)?.user_metadata?.role as UserRole) ?? 'student',
+            fullName:
+              ((currentUser as any)?.user_metadata?.fullName as string) ??
+              ((currentUser as any)?.email as string) ??
+              'مستخدم',
+            email: ((currentUser as any)?.email as string) ?? '',
           };
           setUser(mappedUser);
           setRole(mappedUser.role);
@@ -79,7 +98,7 @@ export const AppProvider = ({ children }: { children?: ReactNode }) => {
           const demoUser: AppUser = {
             id: 'demo-user',
             role: 'student',
-            fullName: 'طالب تجريبي',
+            fullName: 'طالب تجريبي (ديمو)',
             email: 'demo@student.tafaouq.ma',
           };
           setUser(demoUser);
@@ -91,7 +110,7 @@ export const AppProvider = ({ children }: { children?: ReactNode }) => {
         const fallbackUser: AppUser = {
           id: 'fallback-user',
           role: 'student',
-          fullName: 'طالب تجريبي',
+          fullName: 'طالب تجريبي (وضع آمن)',
           email: 'fallback@student.tafaouq.ma',
         };
         setUser(fallbackUser);
@@ -108,32 +127,41 @@ export const AppProvider = ({ children }: { children?: ReactNode }) => {
     async (email: string, password: string) => {
       setIsLoading(true);
       try {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error ?? !data?.user) {
+        const connected = isSupabaseConnected();
+        if (!connected) {
           const demoUser: AppUser = {
             id: 'mock-login-user',
             role: 'student',
-            fullName: 'طالب تجريبي',
+            fullName: 'طالب تجريبي (تسجيل دخول تجريبي)',
             email,
           };
           setUser(demoUser);
           setRole(demoUser.role);
           setSubscriptionStatus('trialing');
-          toast.success('تم تسجيل الدخول التجريبي بنجاح');
+          toast.success('تم تسجيل الدخول التجريبي (بدون اتصال حقيقي بقاعدة البيانات)');
+          return;
+        }
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error ?? !data?.user) {
+          toast.error('بيانات الدخول غير صحيحة أو غير معتمدة');
           return;
         }
         const mappedUser: AppUser = {
-          id: data.user.id,
-          role: (data.user.user_metadata?.role as UserRole) ?? 'student',
-          fullName: (data.user.user_metadata?.fullName as string) ?? data.user.email ?? 'مستخدم',
-          email: data.user.email ?? email,
+          id: (data as any)?.user?.id,
+          role: (((data as any)?.user?.user_metadata?.role as UserRole) ?? 'student') as UserRole,
+          fullName:
+            (((data as any)?.user?.user_metadata?.fullName as string) ??
+              ((data as any)?.user?.email as string) ??
+              'مستخدم'),
+          email: ((data as any)?.user?.email as string) ?? email,
         };
         setUser(mappedUser);
         setRole(mappedUser.role);
         setSubscriptionStatus('active');
-        toast.success('تم تسجيل الدخول بنجاح');
+        toast.success('تم تسجيل الدخول بنجاح عبر Supabase');
       } catch {
-        toast.error('فشل تسجيل الدخول، تم استخدام وضع تجريبي');
+        toast.error('فشل تسجيل الدخول، الرجاء المحاولة مجدداً');
       } finally {
         setIsLoading(false);
       }
@@ -145,36 +173,42 @@ export const AppProvider = ({ children }: { children?: ReactNode }) => {
     async (fullName: string, email: string, password: string, roleOverride?: UserRole) => {
       setIsLoading(true);
       try {
+        const connected = isSupabaseConnected();
+        if (!connected) {
+          const demoUser: AppUser = {
+            id: 'mock-signup-user',
+            role: roleOverride ?? 'student',
+            fullName: `${fullName} (حساب تجريبي)`,
+            email,
+          };
+          setUser(demoUser);
+          setRole(demoUser.role);
+          setSubscriptionStatus('trialing');
+          toast.success('تم إنشاء حساب تجريبي (بدون تخزين حقيقي في Supabase)');
+          return;
+        }
+
         const { data, error } = await supabaseClient.auth.signUp({
           email,
           password,
           options: { data: { fullName, role: roleOverride ?? 'student' } },
         });
         if (error ?? !data?.user) {
-          const demoUser: AppUser = {
-            id: 'mock-signup-user',
-            role: roleOverride ?? 'student',
-            fullName,
-            email,
-          };
-          setUser(demoUser);
-          setRole(demoUser.role);
-          setSubscriptionStatus('trialing');
-          toast.success('تم إنشاء حساب تجريبي بنجاح');
+          toast.error('تعذر إنشاء الحساب، تحقق من البريد الإلكتروني وحاول مجدداً');
           return;
         }
         const mappedUser: AppUser = {
-          id: data.user.id,
+          id: (data as any)?.user?.id,
           role: (roleOverride ?? 'student') as UserRole,
           fullName,
-          email: data.user.email ?? email,
+          email: ((data as any)?.user?.email as string) ?? email,
         };
         setUser(mappedUser);
         setRole(mappedUser.role);
         setSubscriptionStatus('trialing');
         toast.success('تم إنشاء الحساب، يرجى تأكيد البريد الإلكتروني');
       } catch {
-        toast.error('تعذر إنشاء الحساب، تم الانتقال لوضع تجريبي');
+        toast.error('تعذر إنشاء الحساب، يرجى المحاولة لاحقاً');
       } finally {
         setIsLoading(false);
       }

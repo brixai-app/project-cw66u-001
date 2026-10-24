@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useAppContext } from '@/context/AppContext';
 import MobileNavDrawer from './MobileNavDrawer';
-// [auto-removed: file not generated] import CartDrawer from './CartDrawer';
 
 export interface HeaderProps {
   className?: string;
@@ -15,7 +14,6 @@ export function Header({ className = '' }: HeaderProps) {
   const navigate = useNavigate();
   const { user, role, notifications, logout } = useAppContext();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const unreadCount = notifications?.filter((n) => n?.status === 'unread')?.length ?? 0;
 
   const navLinks = [
@@ -129,7 +127,7 @@ export function Header({ className = '' }: HeaderProps) {
               type="button"
               whileTap={{ scale: 0.96 }}
               className="flex h-9 items-center justify-center gap-2 rounded-md bg-[#19B5A5] px-3 text-xs font-semibold uppercase tracking-[0.18em] text-black hover:bg-[#149789]"
-              onClick={() => setIsCartOpen(true)}
+              onClick={() => navigate('/pricing')}
             >
               <ShoppingBag className="h-4 w-4" />
               <span className="hidden sm:inline">الاشتراك</span>
@@ -139,7 +137,6 @@ export function Header({ className = '' }: HeaderProps) {
       </header>
 
       <MobileNavDrawer open={isMobileOpen} onOpenChange={setIsMobileOpen} />
-      <CartDrawer open={isCartOpen} onOpenChange={setIsCartOpen} />
     </>
   );
 }

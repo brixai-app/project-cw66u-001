@@ -53,12 +53,36 @@ export function Home({}: HomeProps) {
       <main className="mx-auto max-w-6xl px-4 py-10 space-y-16">
         <section className="grid gap-10 lg:grid-cols-[1.4fr,1fr] items-stretch">
           <div className="relative overflow-hidden rounded-[14px] bg-[#0B1B2B] text-white min-h-[360px]">
-            <img
-              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1400&q=85"
-              crossOrigin="anonymous"
-              alt="Tafaouq hero"
-              className="absolute inset-0 h-full w-full object-cover opacity-60"
-            />
+            <div className="absolute inset-0 grid grid-cols-2">
+              <div className="relative hidden md:block">
+                <img
+                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80"
+                  alt="طلاب يذاكرون معًا في مكتبة جامعية"
+                  className="h-full w-full object-cover"
+                  crossOrigin="anonymous"
+                />
+              </div>
+              <div className="relative col-span-2 md:col-span-1">
+                <img
+                  src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
+                  alt="طالبة تراجع دروسها وتستعد للامتحان في مكتبة"
+                  className="h-full w-full object-cover object-[40%_40%] md:object-center"
+                  crossOrigin="anonymous"
+                />
+              </div>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0B1B2B]/95 via-[#0B1B2B]/80 to-[#102A43]/80" />
+            </div>
+            <div className="pointer-events-none absolute inset-0 opacity-40">
+              <div className="absolute -left-10 top-10 h-40 w-40 rounded-full border border-[#19B5A5]/40" />
+              <div className="absolute left-6 top-24 h-24 w-24 rounded-full border border-[#19B5A5]/30" />
+              <div className="absolute right-10 bottom-10 h-32 w-32 rotate-6 border border-dashed border-[#D9E2EC]/40" />
+              <div className="absolute right-8 top-14 text-xs font-mono text-[#D9E2EC]/70">
+                x² + y² = r²
+              </div>
+              <div className="absolute left-10 bottom-16 text-xs font-mono text-[#D9E2EC]/70">
+                E = mc²
+              </div>
+            </div>
             <div className="relative h-full flex flex-col justify-between p-8 lg:p-10">
               <div className="flex justify-between gap-4">
                 <motion.div
@@ -197,13 +221,10 @@ export function Home({}: HomeProps) {
         <section className="space-y-6">
           <div className="flex items-center justify-between flex-row-reverse">
             <h2 className="font-[Cairo] text-xl text-[#0B1B2B]">أحدث الدروس المضافة</h2>
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 rounded-md border border-[#D9E2EC] px-3 py-1.5 text-[11px] font-[Tajawal] text-[#5B6B7A]"
-            >
-              عرض كل الدروس
+            <span className="inline-flex items-center gap-1 rounded-md border border-[#D9E2EC] px-3 py-1.5 text-[11px] font-[Tajawal] text-[#5B6B7A]">
+              عرض كل الدروس (تجريبي)
               <ArrowLeft className="h-3 w-3" />
-            </button>
+            </span>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {newestLessons?.map(lesson => (
@@ -216,13 +237,35 @@ export function Home({}: HomeProps) {
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80"
-                    crossOrigin="anonymous"
-                    alt={lesson?.title ?? ''}
+                    src={
+                      lesson?.subjectId === 'math'
+                        ? 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80'
+                        : lesson?.subjectId === 'physics'
+                        ? 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80'
+                        : lesson?.subjectId === 'arabic'
+                        ? 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80'
+                        : lesson?.subjectId === 'french'
+                        ? 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80'
+                        : lesson?.subjectId === 'english'
+                        ? 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=800&q=80'
+                        : 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80'
+                    }
+                    alt="درس تفاعلي لتحضير الامتحانات في بيئة دراسية"
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    crossOrigin="anonymous"
                   />
-                  <div className="absolute left-3 top-3 rounded-md bg-black/60 px-2 py-1 text-[10px] font-[Tajawal] text-white">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
+                  <div className="absolute right-3 top-3 rounded-md bg-black/70 px-2 py-1 text-[10px] font-[Tajawal] text-white">
                     {lesson?.accessLevel === 'free' ? 'درس مجاني' : 'درس مميز'}
+                  </div>
+                  <div className="absolute left-3 bottom-3 text-[10px] font-mono text-[#E5EDF6]">
+                    {lesson?.subjectId === 'math'
+                      ? 'x² + y² = r²'
+                      : lesson?.subjectId === 'physics'
+                      ? 'F = ma'
+                      : lesson?.subjectId === 'chemistry'
+                      ? 'H₂O + CO₂'
+                      : 'Study • Focus'}
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col gap-2 p-3">
