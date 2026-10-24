@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #FFFFFF;
+  --color-bg-rgb: 255, 255, 255;
+  --color-surface: #F5F7FA;
+  --color-surface-rgb: 245, 247, 250;
+  --color-surface-hover: #EEF2F7;
+  --color-surface-hover-rgb: 238, 242, 247;
+  --color-border: #D9E2EC;
+  --color-border-rgb: 217, 226, 236;
+  --color-text-primary: #0B1B2B;
+  --color-text-primary-rgb: 11, 27, 43;
+  --color-text-muted: #5B6B7A;
+  --color-text-muted-rgb: 91, 107, 122;
+  --color-accent: #19B5A5;
+  --color-accent-rgb: 25, 181, 165;
+  --color-accent-hover: #149789;
+  --color-accent-hover-rgb: 20, 151, 137;
+  --color-accent-text: #000000;
+  --radius-theme: 14px;
+  --font-heading: 'DM Sans', sans-serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-bg);
+    background-image: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(var(--color-accent-rgb), 0.06), transparent 60%);
+    background-attachment: fixed;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
